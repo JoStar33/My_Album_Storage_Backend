@@ -16,4 +16,20 @@ router.get('/:user_id', async (req, res, next) => {
   }
 });
 
+router.patch('/:topster_id', async (req, res, next) => {
+  try {
+    const updateTopster = await Topster.updateOne({
+      _id: req.params.topster_id
+    },  {
+      name: req.body.topster.name,
+      type: req.body.topster.type,
+      albums: req.body.topster.albums,
+    });
+    console.log(updateTopster);
+    return res.status(200).json(updateTopster);
+  } catch (err) {
+    res.status(500).json('내부오류 발생!');
+  }
+})
+
 module.exports = router;
