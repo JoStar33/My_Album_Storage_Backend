@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { albumSchema } = require('./album');
+const { topsterAlbumSchema } = require('./topsterAlbum');
 
 const { Schema } = mongoose;
 const { Types: { ObjectId } } = Schema;
@@ -14,7 +14,7 @@ const topsterSchema = new Schema({
     require: true,
     default: "3x3"
   },
-  albums: [albumSchema],
+  albums: [topsterAlbumSchema],
   owner: {
     type: ObjectId,
     required: true,
