@@ -33,27 +33,13 @@ router.patch('/:topster_id', async (req, res, next) => {
 
 router.patch('/album/:topster_id', async (req, res, next) => {
   try {
-    const topsters = await Topster.find({
-      _id: req.params.topster_id
-    });
+    const topsters = await Topster.find({ _id: req.params.topster_id});
     if(topsters[0].albums.find(album => album.position === req.body.topsterAlbum.position)){
-      await Topster.updateOne({
-        _id: req.params.topster_id
-      }, {
-        $pull: {
-          albums: {
-            position: parseInt(req.body.topsterAlbum.position)
-          },
-        }
-      });
+      await Topster.updateOne({ _id: req.params.topster_id }, { 
+        $pull: { albums: { position: parseInt(req.body.topsterAlbum.position) }}});
     }
-    const updateTopster = await Topster.updateOne({
-      _id: req.params.topster_id
-    }, {
-      $push: {
-        albums: req.body.topsterAlbum,
-      }
-    });
+    const updateTopster = await Topster.updateOne({_id: req.params.topster_id }, { 
+        $push: { albums: req.body.topsterAlbum }});
     return res.status(200).json(updateTopster);
   } catch (err) {
     console.log(err);
