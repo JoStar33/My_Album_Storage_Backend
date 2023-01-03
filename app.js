@@ -1,5 +1,5 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
+const { v4 } = require('uuid');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
@@ -34,20 +34,19 @@ app.use(express.json());
 app.use(cors({
   origin: 'http://localhost:3000', // 출처 허용 옵션
   credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
-  exposedHeaders: ["set-cookie"],
+  exposedHeaders: ["Authorization"],
+}));
+app.use(session({
+  // Use UUIDs for session IDs
+  genid: (req) => {
+      return v4()
+  },
+  // Define the session secret in env variable or in config file
+  secret: process.env.COOKIE_SECRET || config.sessionSecretKey,
+  resave: false,
+  saveUninitialized: true
 }));
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
-  resave: false,
-  saveUninitialized: false,
-  secret: process.env.COOKIE_SECRET,
-  cookie: {
-    httpOnly: false,
-    secure: false,
-  },
-  name: 'access_token',
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 

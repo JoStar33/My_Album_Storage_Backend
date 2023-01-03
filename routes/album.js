@@ -1,10 +1,11 @@
 const express = require('express');
 const { Album } = require('../schemas/album');
 const { asyncForEach } = require('../utils/asyncForEach');
+const { verifyToken } = require('./middlewares');
 
 const router = express.Router();
 
-router.post('/:user_id', async (req, res, next) => {
+router.post('/:user_id', verifyToken, async (req, res, next) => {
   try {
     const albums = await Album.find({
       owner: req.params.user_id
@@ -31,7 +32,7 @@ router.post('/:user_id', async (req, res, next) => {
   }
 });
 
-router.get('/:user_id', async (req, res, next) => {
+router.get('/:user_id', verifyToken, async (req, res, next) => {
   try {
     const albums = await Album.find({
       owner: req.params.user_id
@@ -43,7 +44,7 @@ router.get('/:user_id', async (req, res, next) => {
   }
 });
 
-router.delete('/:album_id', async (req, res, next) => {
+router.delete('/:album_id', verifyToken, async (req, res, next) => {
   try {
     const album = await Album.remove({
       _id: req.params.album_id
@@ -54,7 +55,7 @@ router.delete('/:album_id', async (req, res, next) => {
   }
 });
 
-router.patch('/:album_id', async (req, res, next) => {
+router.patch('/:album_id', verifyToken, async (req, res, next) => {
   try {
     console.log(req.body);
     const album = await Album.update({
