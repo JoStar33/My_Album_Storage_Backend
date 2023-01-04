@@ -10,18 +10,18 @@ require("dotenv").config();
 
 const router = express.Router();
 
-router.post("/join", isNotLoggedIn, async (req, res, next) => {
+router.post("/join", async (req, res, next) => {
   const { email, nick, password } = req.body;
   try {
-    const exUser = await User.find({ email });
+    const exUser = await User.find({ email: email });
     console.log(exUser);
-    if (exUser === []) {
+    if (exUser !== []) {
       return res
         .status(400)
         .json({ message: "해당 이메일은 이미 존재합니다." });
     }
-    const exNickUser = await User.find({ nick });
-    if (exNickUser === []) {
+    const exNickUser = await User.find({ nick: nick });
+    if (exNickUser !== []) {
       return res
         .status(400)
         .json({ message: "해당 닉네임은 이미 존재합니다." });
@@ -47,6 +47,39 @@ router.post("/join", isNotLoggedIn, async (req, res, next) => {
     return next(error);
   }
 });
+
+router.post("/join/email", async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const exUser = await User.find({ email: email });
+    console.log(exUser);
+    if (exUser.length !== 0) {
+      return res
+        .status(400)
+        .json({ message: "해당 이메일은 이미 존재합니다." });
+    }
+    return res.json({message: "ok"});
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+})
+router.post("/join/nick", async (req, res, next) => {
+  const { nick } = req.body;
+  try {
+    const exUser = await User.find({ nick: nick });
+    console.log(exUser);
+    if (exUser !== []) {
+      return res
+        .status(400)
+        .json({ message: "해당 닉네임은 이미 존재합니다." });
+    }
+    return res.json({ ok });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+})
 
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (authError, user, info) => {
