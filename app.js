@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
 const connect = require('./schemas');
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
@@ -36,15 +37,22 @@ app.use(cors({
   credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
   exposedHeaders: ["Authorization"],
 }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
+  /*
   // Use UUIDs for session IDs
   genid: (req) => {
       return v4()
   },
   // Define the session secret in env variable or in config file
+  */
   secret: process.env.COOKIE_SECRET || config.sessionSecretKey,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
