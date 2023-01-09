@@ -15,6 +15,8 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const albumRouter = require('./routes/album');
 const topsterRouter = require('./routes/topster');
+const adminRouter = require('./routes/admin');
+const adminAlbumRouter = require('./routes/adminAlbum');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -62,6 +64,8 @@ app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/album', albumRouter);
 app.use('/topster', topsterRouter);
+app.use('/admin', adminRouter);
+app.use('/adminAlbum', adminAlbumRouter);
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
