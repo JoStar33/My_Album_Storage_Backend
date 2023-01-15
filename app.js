@@ -29,13 +29,20 @@ nunjucks.configure('views', {
 });
 connect();
 
+/*
+{
+  origin: 'http://localhost:3000', // 출처 허용 옵션
+  credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+  exposedHeaders: ["Authorization"],
+}
+*/
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000', // 출처 허용 옵션
+  origin: ['http://localhost:3000', 'http://127.0.0.1:5173'], // 출처 허용 옵션
   credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
   exposedHeaders: ["Authorization"],
 }));

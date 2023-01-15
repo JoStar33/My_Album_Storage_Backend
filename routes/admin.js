@@ -19,6 +19,13 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
         message: info.message,
       });
     }
+    console.log(user.admin);
+    if(!user.admin){
+      return res.status(401).json({
+        code: 401,
+        message: "권한이 없습니다.",
+      });
+    }
     return req.login(user, (loginError) => {
       if (loginError) {
         console.error(loginError);
