@@ -5,6 +5,7 @@ const { asyncFor } = require("../utils/asyncForEach");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const User = require("../schemas/user");
 const Topster = require("../schemas/topster");
+const DailyInfo = require("../schemas/dailyInfo");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -81,7 +82,7 @@ router.post("/join/nick", async (req, res, next) => {
   }
 })
 
-router.post("/login", isNotLoggedIn, (req, res, next) => {
+router.post("/login", isNotLoggedIn, async (req, res, next) => {
   passport.authenticate("local", (authError, user, info) => {
     if (authError) {
       console.error(authError);
@@ -98,6 +99,7 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       }
+      DailyInfo.find({}).length
       const token = jwt.sign(
         {
           id: user._id,
